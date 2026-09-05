@@ -1,39 +1,109 @@
-# Attendance Management Admin Panel
+# Universal Admin / Control Panel
 
-https://katwalanim6-maker.github.io/Admin/
+A reusable, dependency-free control-panel UI that can be dropped into different web projects.
 
-A responsive administrative dashboard for students, teachers, classes, attendance, reports, users, roles, permissions and audit logs.
+**Live demo:** https://katwalanim6-maker.github.io/Admin/
 
-## Included
-- Responsive desktop sidebar + mobile drawer
-- Dashboard with attendance KPIs, trend and activity
-- Student and teacher lifecycle management with archive/restore
-- Class/section and teacher assignment workflows
-- Daily attendance with present/absent review and save
-- Attendance statistics and report views
-- User roles: Admin, Teacher, Viewer
-- Validation, duplicate prevention, confirmations and toast feedback
-- Search/filter/sort-ready management views
-- Activity/audit log UI
-- Local demo persistence so the UI works immediately
-- Supabase PostgreSQL schema with RLS and permission functions in `supabase/schema.sql`
-- GitHub Pages deployment workflow
+## What this repository is
 
-## Demo mode
-The hosted static UI currently runs with browser-local demo data. Sign in with the prefilled demo account. This is intentional: a GitHub Pages frontend must not contain a service-role or other secret credential.
+This is **not** an attendance-management application anymore. It is a reusable UI shell for future projects.
 
-For production, connect the UI to Supabase Auth/Postgres and deploy the SQL in `supabase/schema.sql`. Enforce authorization with RLS/database functions, not by hiding buttons in JavaScript.
+The panel owns the common administrative experience:
 
-## Security model
-The repository includes server/data-layer policies for:
-- authenticated profile access
-- Admin-only user/profile and master-data writes
-- Teacher/Viewer permission boundaries
-- attendance creation/correction controls
-- admin-only audit-log viewing
-- authenticated audit-log insertion
+- Responsive sidebar + mobile navigation
+- Header, search, notifications and user area
+- Configurable navigation
+- Dashboard stat cards and recent activity
+- Project action buttons
+- Custom project-specific content slots
+- Theme/accent configuration
+- Browser/framework agnostic JavaScript
+- No database, authentication or backend lock-in
+- No third-party runtime dependencies
 
-Attendance corrections should always include the correcting user, timestamp and reason in the production UI/data layer.
+Your project owns its data, business logic, authentication and backend.
 
-## Deploy
-The repository includes `.github/workflows/deploy-pages.yml`. Enable GitHub Pages for the repository using **GitHub Actions** as the source. The workflow publishes the repository root, including `index.html`.
+## Add it to any HTML project
+
+Copy `universal-admin-panel.js` into your project and add:
+
+```html
+<script src="./universal-admin-panel.js"></script>
+<div id="admin-panel"></div>
+<script>
+  UniversalAdminPanel.mount('#admin-panel', {
+    brand: 'KITC',
+    subtitle: 'Secretary Hub',
+    accent: '#2563eb',
+    user: { name: 'Secretary', role: 'Administrator' },
+    navigation: [
+      { id: 'dashboard', label: 'Dashboard', icon: '⌂' },
+      { id: 'members', label: 'Members', icon: '♙' },
+      { id: 'meetings', label: 'Meetings', icon: '▣' },
+      { id: 'events', label: 'Events', icon: '◈' },
+      { id: 'reports', label: 'Reports', icon: '◒' },
+      { id: 'settings', label: 'Settings', icon: '⚙' }
+    ],
+    stats: [
+      { label: 'Members', value: 42, note: 'Active members' },
+      { label: 'Open Tasks', value: 7, note: 'Needs attention' }
+    ],
+    actions: [
+      { label: 'Add Member', primary: true, onClick: () => openMemberForm() }
+    ]
+  });
+</script>
+```
+
+## Custom project pages
+
+Use the `content` renderer when the selected navigation item needs real project UI:
+
+```js
+content: ({ page, item, data }) => {
+  if (page === 'members') return renderMembers(data.members);
+  if (page === 'meetings') return renderMeetings(data.meetings);
+  return null; // fall back to the built-in dashboard/module shell
+}
+```
+
+The panel also emits `panel:navigate`, `panel:search`, `panel:action`, and `panel:notification` events.
+
+## Custom element option
+
+The panel is also a Web Component:
+
+```html
+<universal-admin-panel id="panel"></universal-admin-panel>
+<script>
+  document.querySelector('#panel').setConfig({
+    brand: 'School System',
+    navigation: [
+      { id: 'dashboard', label: 'Dashboard', icon: '⌂' },
+      { id: 'students', label: 'Students', icon: '♙' }
+    ]
+  });
+</script>
+```
+
+## Architecture rule
+
+Keep the reusable panel generic. Do **not** put attendance, KITC, shop, school or other project-specific business logic inside the panel core.
+
+```text
+Universal Panel
+├── Shell / Layout
+├── Navigation
+├── Shared UI
+├── Dashboard primitives
+└── Events / configuration
+
+Project
+├── Business data
+├── Authentication
+├── API / database
+├── Project modules
+└── Project permissions
+```
+
+This separation lets the same panel become the admin foundation for many projects without rebuilding the UI each time.
