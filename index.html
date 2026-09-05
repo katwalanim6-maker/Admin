@@ -3,56 +3,52 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#101426">
-  <title>Universal Control Panel</title>
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="A reusable, dependency-free administrative control panel.">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <title>Universal Admin Panel</title>
   <style>
-    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#182033;background:#eef1f7}*{box-sizing:border-box}body{margin:0}.demo{max-width:1500px;margin:0 auto;padding:28px}.intro{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:18px}.intro h1{margin:0;font-size:28px}.intro p{margin:6px 0 0;color:#69758a}.pill{padding:7px 10px;border-radius:999px;background:#fff;border:1px solid #e1e6ef;color:#59657a;font-size:12px;font-weight:700}@media(max-width:650px){.demo{padding:12px}.intro{align-items:flex-start;flex-direction:column}}
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f3f5f8}*{box-sizing:border-box}body{margin:0}.demo{max-width:1500px;margin:0 auto;padding:32px}.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:20px}.intro h1{margin:0;font-size:28px;letter-spacing:-.02em}.intro p{max-width:680px;margin:7px 0 0;color:#667085;line-height:1.55}.links{display:flex;gap:14px;flex-wrap:wrap}.links a{color:#344054;text-decoration:none;font-size:13px;font-weight:700}.links a:hover{text-decoration:underline}@media(max-width:650px){.demo{padding:16px}.intro{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
-  <div class="demo">
+  <main class="demo">
     <div class="intro">
-      <div><h1>Universal Control Panel</h1><p>This page is only a demo host. The panel itself is the reusable component.</p></div>
-      <span class="pill">v1.0 · dependency-free</span>
+      <div>
+        <h1>Universal Admin Panel</h1>
+        <p>A reusable administrative interface for projects that supply their own authentication, data and business rules.</p>
+      </div>
+      <nav class="links" aria-label="Legal">
+        <a href="./privacy.html">Privacy</a>
+        <a href="./terms.html">Terms</a>
+      </nav>
     </div>
     <div id="panel"></div>
-  </div>
+  </main>
   <script src="./universal-admin-panel.js"></script>
   <script>
     UniversalAdminPanel.mount('#panel', {
-      brand: 'My Project',
-      subtitle: 'Management Console',
-      logo: '◆',
-      accent: '#5b5bd6',
+      brand: 'Admin',
+      subtitle: 'Control Panel',
+      logo: 'UA',
+      accent: '#1f5f8b',
       user: { name: 'Project Admin', role: 'Administrator' },
       navigation: [
-        { id: 'dashboard', label: 'Dashboard', icon: '⌂' },
-        { id: 'members', label: 'Members', icon: '♙' },
-        { id: 'projects', label: 'Projects', icon: '▤' },
-        { id: 'reports', label: 'Reports', icon: '◒' },
-        { id: 'activity', label: 'Activity Logs', icon: '◷' },
-        { id: 'settings', label: 'Settings', icon: '⚙' }
+        { id: 'dashboard', label: 'Dashboard', icon: 'D' },
+        { id: 'members', label: 'Members', icon: 'M' },
+        { id: 'projects', label: 'Projects', icon: 'P' },
+        { id: 'reports', label: 'Reports', icon: 'R' },
+        { id: 'activity', label: 'Activity Logs', icon: 'A' },
+        { id: 'settings', label: 'Settings', icon: 'S' }
       ],
-      stats: [
-        { label: 'Total Records', value: '1,248', note: '+8.4% this month', icon: '↗' },
-        { label: 'Active', value: '1,106', note: '88.6% of records', icon: '✓' },
-        { label: 'Pending', value: '74', note: 'Needs attention', icon: '!' },
-        { label: 'Archived', value: '68', note: 'Stored safely', icon: '◫' }
-      ],
-      activity: [
-        { action: 'Record updated', meta: 'Project Admin · 12 minutes ago' },
-        { action: 'New member added', meta: 'Project Admin · 38 minutes ago' },
-        { action: 'Report generated', meta: 'Manager · 1 hour ago' }
-      ],
-      actions: [
-        { label: 'Export', onClick: () => alert('Export action from the host project.') },
-        { label: 'Add Record', primary: true, onClick: () => alert('Add action from the host project.') }
-      ],
-      content: ({ page, item }) => {
+      stats: [],
+      activity: [],
+      actions: [],
+      content: ({ page }) => {
         if (page === 'dashboard') return null;
-        return `<div class="card" style="background:#fff;border:1px solid #e7ebf2;border-radius:14px;padding:40px;text-align:center;color:#748096"><strong style="display:block;color:#182033;margin-bottom:6px">${item.label}</strong>This module is supplied by the project using the panel.</div>`;
+        return `<div class="card" style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;padding:40px;text-align:center;color:#667085"><strong style="display:block;color:#172033;margin-bottom:6px">${page}</strong>This module is supplied by the host project.</div>`;
       }
-    }).on('panel:navigate', event => console.log('Panel navigation:', event.detail.id));
+    });
   </script>
 </body>
 </html>
